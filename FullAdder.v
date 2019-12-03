@@ -9,6 +9,6 @@ module FullAdder(
 
    HalfAdder hadder1(a, b, halfsum, halfcarry1);
    HalfAdder hadder2(halfsum, c, sum, halfcarry2);
-   _Xor _xor(halfcarry1, halfcarry2, carry);
+   h_Xor xor1(halfcarry1, halfcarry2, carry);
 
 endmodule

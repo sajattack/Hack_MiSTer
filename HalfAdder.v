@@ -3,8 +3,8 @@ module HalfAdder(
     output sum, carry
 );
 
-    _Xor _xor(a, b, sum);
-    _And _and(a, b, carry);
+    h_Xor xor1(a, b, sum);
+    h_And and1(a, b, carry);
 
 
 endmodule

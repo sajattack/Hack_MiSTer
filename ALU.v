@@ -32,6 +32,6 @@ module ALU(
     Mux16 mux6(xy, notxy, no, out);
     assign ng = out[15];
 
-    _Not not4((|out), zr);
+    h_Not not4((|out), zr);
 
 endmodule

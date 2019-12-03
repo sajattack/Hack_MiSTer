@@ -5,8 +5,8 @@ module DMux (
 
     wire notSel;
 
-    _Not _not(sel, notSel);
-    _And and1(in, notSel, a);
-    _And and2(in, sel, b);
+    h_Not not1(sel, notSel);
+    h_And and1(in, notSel, a);
+    h_And and2(in, sel, b);
 
 endmodule

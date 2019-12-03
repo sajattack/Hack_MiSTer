@@ -4,19 +4,17 @@ module RAM16K(
     input [15:0] in,
     input load,
     input [13:0] address,
-    output [15:0] out
+    output reg[15:0] out
 );
 
-//    reg [15:0] ram [16383:0]; 
-//
-//    always @(posedge clk) begin
-//        if (load) begin
-//            ram[address] <= in;
-//        end else begin
-//            out <= ram[address];
-//        end
-//    end
+    reg [15:0] ram [16383:0]; 
 
-OcmRAM ram(clk, in, address, address, load, out);
+    always @(posedge clk) begin
+        if (load) begin
+            ram[address] <= in;
+        end else begin
+            out <= ram[address];
+        end
+    end
 
 endmodule

@@ -11,19 +11,19 @@ module DMux4Way(
     wire wire3;
     wire wire4;
 
-    _Not not1(sel[0], notSel0);
-    _Not not2(sel[1], notSel1);
+    h_Not not1(sel[0], notSel0);
+    h_Not not2(sel[1], notSel1);
 
-    _And and1(in, notSel0, wire1);
-    _And and2(wire1, notSel1, a);
+    h_And and1(in, notSel0, wire1);
+    h_And and2(wire1, notSel1, a);
 
-    _And and3(in, sel[0], wire2);
-    _And and4(wire2, notSel1, b);
+    h_And and3(in, sel[0], wire2);
+    h_And and4(wire2, notSel1, b);
 
-    _And and5(in, notSel0, wire3);
-    _And and6(wire3, sel[1], c);
+    h_And and5(in, notSel0, wire3);
+    h_And and6(wire3, sel[1], c);
 
-    _And and7(in, sel[0], wire4);
-    _And and8(wire4, sel[1], d);
+    h_And and7(in, sel[0], wire4);
+    h_And and8(wire4, sel[1], d);
 
 endmodule

@@ -1,22 +1,23 @@
 module HVSyncGenerator(
   input clk,
   input reset,
-  output reg hsync, vsync, hblank, vblank,
+  output reg hsync, vsync,
+  output display_on,
   output reg [9:0] hpos,
   output reg [9:0] vpos
 );
 
   // declarations for TV-simulator sync parameters
   // horizontal constants
-  parameter H_DISPLAY       = 512; // horizontal display width
-  parameter H_BACK          =  23; // horizontal left border (back porch)
-  parameter H_FRONT         =   7; // horizontal right border (front porch)
-  parameter H_SYNC          =  23; // horizontal sync width
+  parameter H_DISPLAY       = 640; // horizontal display width
+  parameter H_BACK          =  48; // horizontal left border (back porch)
+  parameter H_FRONT         =  16; // horizontal right border (front porch)
+  parameter H_SYNC          =  96; // horizontal sync width
   // vertical constants
-  parameter V_DISPLAY       = 256; // vertical display height
-  parameter V_TOP           =   5; // vertical top border
-  parameter V_BOTTOM        =  14; // vertical bottom border
-  parameter V_SYNC          =   3; // vertical sync # lines
+  parameter V_DISPLAY       = 480; // vertical display height
+  parameter V_TOP           =  10; // vertical top border
+  parameter V_BOTTOM        =  33; // vertical bottom border
+  parameter V_SYNC          =   2; // vertical sync # lines
   // derived constants
   parameter H_SYNC_START    = H_DISPLAY + H_FRONT;
   parameter H_SYNC_END      = H_DISPLAY + H_FRONT + H_SYNC - 1;
@@ -35,7 +36,7 @@ module HVSyncGenerator(
     if(hmaxxed)
       hpos <= 0;
     else
-      hpos <= hpos + 1;
+      hpos <= hpos + 10'd1;
   end
 
   // vertical position counter
@@ -46,13 +47,10 @@ module HVSyncGenerator(
       if (vmaxxed)
         vpos <= 0;
       else
-        vpos <= vpos + 1;
+        vpos <= vpos + 10'd1;
   end
   
-  // hblank and vblank
-  always @(posedge clk) begin
-      hblank <= hpos>H_DISPLAY;
-      vblank <= vpos>V_DISPLAY;
-  end
+  assign display_on = (hpos<640) && (vpos<256);
+
 
 endmodule

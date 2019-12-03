@@ -2,51 +2,117 @@ module CPU (
     input clk,
     input [15:0] inM, instruction,
     input reset, 
-    output [15:0] outM,
-    output writeM,
+    output reg [15:0] outM,
+    output reg writeM,
     output reg [14:0] addressM,
-    output [14:0] pc
+    output reg [14:0] pc
 );
 
-    wire cInst, aDest, loadA, loadD, zr, ng, jeq, jlt, jgt, jle, jump, noJump, 
-        jumpToA, zeroOrNeg;
-    wire [15:0] aluOut, dRegOut, aluY;
-    wire [14:0] aRegIn, aRegOut;
+    wire cInst, aDest, zr, ng, jeq, jlt, jgt, jle, jump, 
+        jumpToA, zeroOrNeg, positive;
+    wire [15:0] nextY;
+    reg [15:0] aluX, aluY;
+    reg [15:0] aReg, dReg;
+    wire [15:0] aluOut;
 
-    wire aInst = instruction[15];
+    wire aInst = instruction[15]==0;
 	 
-    _Not not1(aInst, cInst);
+    h_Not not1(aInst, cInst);
 
-    _And and2(cInst, instruction[5], aDest);
-    _Or or1(aInst, aDest, loadA);
+    h_And and2(cInst, instruction[5], aDest);
     wire dDest = instruction[4];
-    _And and3(dDest, cInst, loadD);
     wire mDest = instruction[3];
-    _And and4(mDest, cInst, writeM);
 
-    Mux16 mux1(instruction, aluOut, aDest, aRegIn);
-    Register aRegister(clk, aRegIn, loadA, aRegOut);
+    Mux16 mux2(aReg, inM, instruction[12], nextY);
 
-    Register dRegister(clk, aluOut, loadD, dRegOut);
-    wire [15:0] aluX = dRegOut;
-
-    Mux16 mux2(aRegOut, inM, instruction[12], aluY);
-    
     ALU alu(aluX, aluY, instruction[11], instruction[10], instruction[9], instruction[8], instruction[7], instruction[6], zr, ng, aluOut);
 
-    _And and5(zr, instruction[1], jeq);
-    _And and6(zr, instruction[2], jlt);
-    _Or or2(zr, ng, zeroOrNeg); 
-    _Nand nand1(zeroOrNeg, instruction[0], jgt);
-    _Or or3(jeq, jlt, jle);
-    _Or or4(jle, jgt, jumpToA);
-    _And and7(cInst, jumpToA, jump);
-    _Not not2(jump, noJump);
-    PC _pc(clk, aRegOut, jump, noJump, reset, pc);
+    h_And and5(zr, instruction[1], jeq);
+    h_And and6(ng, instruction[2], jlt);
+    h_Or or2(zr, ng, zeroOrNeg); 
+    h_Not not2(zeroOrNeg, positive);
+    h_And and7(positive, instruction[0], jgt);
+    h_Or or3(jeq, jlt, jle);
+    h_Or or4(jle, jgt, jumpToA);
+    h_And and8(cInst, jumpToA, jump);
 
-    assign outM = aluOut;
-    always @(posedge clk) begin
-        addressM <= aRegOut; 
+     localparam [3:0] EXECUTE = 4'b0001;
+	 localparam [3:0] SETXY = 4'b0010;
+	 localparam [3:0] SET_DEST = 4'b0100;
+	 localparam [3:0] SET_PC = 4'b1000;
+	 
+	 reg [3:0] state;
+	 
+	 initial begin
+		pc = 0;
+		writeM = 0;
+		addressM = 0;
+		outM = 0;
+		aluX = 0;
+		aluY = 0;
+		aReg = 0;
+		dReg = 0;
+      state = EXECUTE;
+	end
+    
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            pc <= 0;
+				writeM <= 0;
+				addressM <= 0;
+				outM <= 0;
+				aluX <= 0;
+				aluY <= 0;
+				aReg <= 0;
+				dReg <= 0;
+            state <= EXECUTE;
+        end else begin
+			  case(state)
+					EXECUTE: begin
+						 if (aInst) begin
+							  aReg <= instruction;
+							  state <= SET_PC;
+						 end else begin
+							  state <= SETXY;
+							  addressM <= aReg[14:0];
+						 end
+					end
+					SETXY: begin
+						 aluX <= dReg;
+						 aluY <= nextY;
+						 state <= SET_DEST;
+					end
+					SET_DEST: begin
+						 if (mDest)
+							 outM <= aluOut; 
+							 writeM <= 1;
+						 if (aDest)
+							  aReg <= aluOut;
+						 if (dDest)
+							  dReg <= aluOut;
+						 state <= SET_PC;
+					end
+					SET_PC: begin
+						 writeM <= 0;
+						 if (jump)
+							  pc <= aReg[14:0];
+						 else
+							 pc <= pc + 15'd1; 
+						 state <= EXECUTE;
+					end
+					default: begin
+						pc <= 0;
+						writeM <= 0;
+						addressM <= 0;
+						outM <= 0;
+						aluX <= 0;
+						aluY <= 0;
+						aReg <= 0;
+						dReg <= 0;
+						state <= EXECUTE;
+					end
+			  endcase
+        end
     end
 
 endmodule
