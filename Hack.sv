@@ -204,77 +204,11 @@ assign {SD_SCK, SD_MOSI, SD_CS} = 'Z;
 
 
 ////////////////////////////  INPUT  ////////////////////////////////////
+
 wire [10:0] ps2_key;
-reg [7:0] ps2_ascii;
-reg ps2_changed;
-reg ps2_released;
+wire [7:0] hack_scancode;
 
-// If the user tries hard enough with the gamepad they can get keys stuck 
-// until they press them again. This could stand to be improved in the future.
-
-always @(posedge clk_sys) begin
-	reg old_state;
-
-	old_state <= ps2_key[10];
-	
-	ps2_changed <= (old_state != ps2_key[10]);
-	ps2_released <= ~ps2_key[9];
-	
-	
-	if(old_state != ps2_key[10]) begin
-		casex(ps2_key[8:0])
-			'hX16: ps2_ascii <= "1"; // 1
-			'hX1E: ps2_ascii <= "2"; // 2
-			'hX26: ps2_ascii <= "3"; // 3
-			'hX25: ps2_ascii <= "4"; // 4
-			'hX2E: ps2_ascii <= "5"; // 5
-			'hX36: ps2_ascii <= "6"; // 6
-			'hX3D: ps2_ascii <= "7"; // 7
-			'hX3E: ps2_ascii <= "8"; // 8
-			'hX46: ps2_ascii <= "9"; // 9
-			'hX45: ps2_ascii <= "0"; // 0
-			
-			'hX1C: ps2_ascii <= "a"; // a
-			'hX32: ps2_ascii <= "b"; // b
-			'hX21: ps2_ascii <= "c"; // c
-			'hX23: ps2_ascii <= "d"; // d
-			'hX24: ps2_ascii <= "e"; // e
-			'hX2B: ps2_ascii <= "f"; // f
-			'hX34: ps2_ascii <= "g"; // g
-			'hX33: ps2_ascii <= "h"; // h
-			'hX43: ps2_ascii <= "i"; // i
-			'hX3B: ps2_ascii <= "j"; // j
-			'hX42: ps2_ascii <= "k"; // k
-			'hX4B: ps2_ascii <= "l"; // l
-			'hX3A: ps2_ascii <= "m"; // m
-			'hX31: ps2_ascii <= "n"; // n
-			'hX44: ps2_ascii <= "o"; // o
-			'hX4D: ps2_ascii <= "p"; // p
-			'hX15: ps2_ascii <= "q"; // q
-			'hX2D: ps2_ascii <= "r"; // r
-			'hX1B: ps2_ascii <= "s"; // s
-			'hX2C: ps2_ascii <= "t"; // t
-			'hX3C: ps2_ascii <= "u"; // u
-			'hX2A: ps2_ascii <= "v"; // v
-			'hX1D: ps2_ascii <= "w"; // w
-			'hX22: ps2_ascii <= "x"; // x
-			'hX35: ps2_ascii <= "y"; // y
-			'hX1A: ps2_ascii <= "z"; // z
-			'hX29: ps2_ascii <= " "; // space
-			'hX79: ps2_ascii <= "+"; // +
-			'hX7B: ps2_ascii <= "-"; // -
-			'hX7C: ps2_ascii <= "*"; // *
-			'hX4A: ps2_ascii <= "/"; // /
-			'hX55: ps2_ascii <= "="; // /
-			'hX1F: ps2_ascii <= 8'h11; // gui l / yes
-			'hX27: ps2_ascii <= 8'h12; // gui r / no
-			'hX5A: ps2_ascii <= 8'd10; // enter
-			'hX66: ps2_ascii <= 8'd8; // backspace
-			default: ps2_ascii <= 8'h00;
-		endcase
-	end
-end
-
+Keyboard keyboard(clk_sys, ps2_key, hack_scancode);
 
 ////////////////////////////  MEMORY & VIDEO ///////////////////////////////////
 
@@ -288,8 +222,8 @@ end
 //);
 
 
-	 wire display_on;
-	 ROM32K rom(pc, instruction);
-    Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, ps2_ascii, r, g, b, hsync, vsync, display_on);
+	wire display_on;
+	ROM32K rom(pc, instruction);
+    Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, hack_scancode, r, g, b, hsync, vsync, display_on);
 
 endmodule

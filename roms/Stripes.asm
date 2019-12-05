@@ -1,3 +1,4 @@
+// set asmsyntax=hack
 @i
 M=0
 @8192

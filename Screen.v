@@ -9,12 +9,12 @@ module Screen(
     input [12:0] address,
     output reg [15:0] out,
 	 output reg r, g, b, 
-	 output hsync, vsync, display_on
+	 output hsync, vsync, display_on,
+	 output [9:0] hpos, vpos
 );
 
-	wire [9:0] hpos, vpos;
 
-	reg [15:0] vram [8192];
+	reg [15:0] vram [8192] /*verilator public*/; 
 
 	HVSyncGenerator hvsync(clk_video, reset, hsync, vsync, display_on, hpos, vpos);
   

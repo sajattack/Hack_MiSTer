@@ -1,6 +1,6 @@
 module ROM32K(
     input [14:0] pc,
-    output [15:0] instruction
+    output reg [15:0] instruction
 );
 
     reg [15:0] rom [32767:0]; 
@@ -9,7 +9,8 @@ module ROM32K(
         $readmemb("roms/Pattern.hack", rom);
     end
 	 
-	 assign instruction = rom[pc];
+	 always @(pc) 
+		instruction = rom[pc];
 
 
 endmodule
