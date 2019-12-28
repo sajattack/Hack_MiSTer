@@ -67,3 +67,6 @@ greybox_tmp
 /output_files
 /simulation
 PLLJ_PLLSPE_INFO.txt
+
+# verilator simulation
+obj_dir/

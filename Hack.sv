@@ -160,7 +160,7 @@ pll pll
 );
 
 
-wire reset = RESET;
+wire reset = RESET | buttons[1] | status[0] | ioctl_download;
 
 ////////////////////////////  SYSTEM  ///////////////////////////////////
 wire [14:0] addressM;
@@ -180,8 +180,8 @@ assign VGA_VS = vsync;
 assign VGA_DE = display_on;
 assign VGA_SL = 0;
 assign VGA_F1 = 0;
-assign VIDEO_ARX = 8'd4;
-assign VIDEO_ARY = 8'd3;
+assign VIDEO_ARX = 8'd2;
+assign VIDEO_ARY = 8'd1;
 assign CE_PIXEL = 1'd1;
 
 assign AUDIO_S = 0;
@@ -277,16 +277,14 @@ end
 
 
 ////////////////////////////  MEMORY & VIDEO ///////////////////////////////////
-
-//ROM32K rom
-//(
-//	.clk(clk_sys),
-//	.in(ioctl_dout),
-//	.load(ioctl_wr),
-//	.pc(ioctl_addr[14:0]),
-//	.instruction(instruction)
-//);
-
+//	 reg [15:0] rom [32767:0];
+//	 always @(posedge clk_sys) begin
+//		if (ioctl_wr)
+//			rom[ioctl_addr[14:0]] <= ioctl_dout;
+//		else
+//			instruction <= rom[pc];
+//	 end
+	 
 
 	 wire display_on;
 	 ROM32K rom(pc, instruction);
