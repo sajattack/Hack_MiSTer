@@ -1,6 +1,6 @@
 module CPU (
     input clk,
-    input [15:0] inM, instruction,
+    input [15:0] inM, romOut,
     input reset, 
     output reg [15:0] outM,
     output reg writeM,
@@ -14,7 +14,8 @@ module CPU (
     reg [15:0] aluX, aluY;
     reg [15:0] aReg, dReg;
     wire [15:0] aluOut;
-
+	 reg [15:0] instruction;
+		
     wire aInst = instruction[15]==0;
 	 
     h_Not not1(aInst, cInst);
@@ -36,12 +37,14 @@ module CPU (
     h_Or or4(jle, jgt, jumpToA);
     h_And and8(cInst, jumpToA, jump);
 
-     localparam [3:0] EXECUTE = 4'b0001;
-	 localparam [3:0] SETXY = 4'b0010;
-	 localparam [3:0] SET_DEST = 4'b0100;
-	 localparam [3:0] SET_PC = 4'b1000;
+    localparam [4:0] EXECUTE = 5'b00001;
+	 localparam [4:0] SETXY = 5'b00010;
+	 localparam [4:0] SET_DEST = 5'b00100;
+	 localparam [4:0] SET_PC = 5'b01000;
+	 localparam [4:0] FETCH = 5'b10000;
 	 
-	 reg [3:0] state;
+	 reg [4:0] state;
+	 reg [2:0] wait_counter;
 	 
 	 initial begin
 		pc = 0;
@@ -52,7 +55,7 @@ module CPU (
 		aluY = 0;
 		aReg = 0;
 		dReg = 0;
-      state = EXECUTE;
+      state = FETCH;
 	end
     
     always @(posedge clk or posedge reset) begin
@@ -65,9 +68,13 @@ module CPU (
 				aluY <= 0;
 				aReg <= 0;
 				dReg <= 0;
-            state <= EXECUTE;
+            state <= FETCH;
         end else begin
 			  case(state)
+					FETCH: begin
+						instruction <= romOut;
+						state <= EXECUTE;
+					end
 					EXECUTE: begin
 						 if (aInst) begin
 							  aReg <= instruction;
@@ -98,7 +105,7 @@ module CPU (
 							  pc <= aReg[14:0];
 						 else
 							 pc <= pc + 15'd1; 
-						 state <= EXECUTE;
+						 state <= FETCH;
 					end
 					default: begin
 						pc <= 0;
@@ -109,7 +116,7 @@ module CPU (
 						aluY <= 0;
 						aReg <= 0;
 						dReg <= 0;
-						state <= EXECUTE;
+						state <= FETCH;
 					end
 			  endcase
         end

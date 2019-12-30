@@ -109,8 +109,10 @@ module emu(
 
 `include "build_id.v"
 parameter CONF_STR = {
-	"HACK;;",
+	"Hack;;",
+	"-;",
 	"F,BIN;",
+	"-;",
 	"R0,Reset;",
 	"V,v",`BUILD_DATE
 };
@@ -120,7 +122,7 @@ wire [31:0] status;
 
 wire        ioctl_download;
 wire [24:0] ioctl_addr;
-wire [15:0] ioctl_dout;
+wire [7:0] ioctl_dout;
 wire        ioctl_wait;
 wire        ioctl_wr;
 
@@ -160,16 +162,16 @@ pll pll
 );
 
 
-wire reset = RESET;
+wire reset = RESET | buttons[1] | status[0] | ioctl_download;
 
 ////////////////////////////  SYSTEM  ///////////////////////////////////
 wire [14:0] addressM;
-wire [15:0] outM, memOut, instruction;
+wire [15:0] outM, memOut, rom_out;
 wire writeM;
 wire [14:0] pc;
 wire r, g, b, hsync, vsync;
 
-CPU cpu(clk_sys, memOut, instruction, reset, outM, writeM, addressM, pc);
+CPU cpu(clk_sys, memOut, rom_out, reset, outM, writeM, addressM, pc);
 
 assign CLK_VIDEO = clk_video;
 assign VGA_R = {8{r}};
@@ -180,8 +182,8 @@ assign VGA_VS = vsync;
 assign VGA_DE = display_on;
 assign VGA_SL = 0;
 assign VGA_F1 = 0;
-assign VIDEO_ARX = 8'd4;
-assign VIDEO_ARY = 8'd3;
+assign VIDEO_ARX = 8'd2;
+assign VIDEO_ARY = 8'd1;
 assign CE_PIXEL = 1'd1;
 
 assign AUDIO_S = 0;
@@ -192,8 +194,8 @@ assign {AUDIO_L, AUDIO_R} = 0;
 assign AUDIO_S   = 0;
 assign AUDIO_MIX = 0;
 
-assign LED_USER  = ioctl_download;
-assign LED_DISK  = 0;
+assign LED_USER  = 0;
+assign LED_DISK  = ioctl_download;
 assign LED_POWER = 0;
 assign BUTTONS = 0;
 assign ADC_BUS = 'Z;
@@ -210,20 +212,41 @@ wire [7:0] hack_scancode;
 
 Keyboard keyboard(clk_sys, ps2_key, hack_scancode);
 
-////////////////////////////  MEMORY & VIDEO ///////////////////////////////////
+////////////////////////////  MEMORY & VIDEO ///////////////////////////////////	 
 
-//ROM32K rom
-//(
-//	.clk(clk_sys),
-//	.in(ioctl_dout),
-//	.load(ioctl_wr),
-//	.pc(ioctl_addr[14:0]),
-//	.instruction(instruction)
-//);
+reg count = 1'd0;
+reg [15:0] rom_data_in = 16'd0;
+reg [14:0] rom_addr_in = 15'd0;
+reg rom_wr;
 
-
-	wire display_on;
-	ROM32K rom(pc, instruction);
-    Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, hack_scancode, r, g, b, hsync, vsync, display_on);
+ dpram rom(
+	.clock(clk_sys),
+	.data(rom_data_in),
+	.rdaddress(pc),
+	.wraddress(rom_addr_in),
+	.wren(rom_wr),
+	.q(rom_out)
+);
+	 
+always @(posedge clk_sys) begin
+	rom_wr <= 0;
+	if (ioctl_wr) begin
+		count <= count + 1'd1;
+		if (count==0)
+			rom_data_in[15:8] <= ioctl_dout;
+		else begin
+			rom_data_in[7:0] <= ioctl_dout;
+			rom_addr_in <= ioctl_addr >> 1;
+			rom_wr <= 1;
+		end
+	end else begin
+		rom_addr_in <= rom_addr_in;
+		count <= count;
+		rom_data_in <= rom_data_in;
+	end
+end
+ 
+ wire display_on;
+ Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, ps2_ascii, r, g, b, hsync, vsync, display_on);
 
 endmodule

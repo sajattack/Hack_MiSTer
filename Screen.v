@@ -25,14 +25,12 @@ module Screen(
 			if (display_on) begin
 				 if (0 == hpos[3:0]) begin
 					vshift <= vram[vindex];
-                    vindex <= vindex + 13'd1;
-                 end else
-                    vshift <= vshift << 1;
-				 if (hpos > 128) begin
-						r <= vshift[15];
-						g <= vshift[15];
-						b <= vshift[15];
-                 end
+               vindex <= vindex + 13'd1;
+             end else
+					vshift <= vshift << 1;
+				r <= vshift[15];
+				g <= vshift[15];
+				b <= vshift[15];
 			end else begin
 				r <= 1'd0;
 				g <= 1'd0;

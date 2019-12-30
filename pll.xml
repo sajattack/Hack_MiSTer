@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<instance entity-name="altera_pll" version="17.0" >
+<instance entity-name="altera_pll" version="17.1" >
 <generic name="debug_print_output" value="false" />
 <generic name="debug_use_rbc_taf_method" value="false" />
 <generic name="device_family" value="Cyclone V" />
 <generic name="device" value="5CEBA2F17A7" />
 <generic name="gui_device_speed_grade" value="2" />
-<generic name="gui_pll_mode" value="Fractional-N PLL" />
+<generic name="gui_pll_mode" value="Integer-N PLL" />
 <generic name="gui_reference_clock_frequency" value="50.0" />
 <generic name="gui_channel_spacing" value="0.0" />
 <generic name="gui_operation_mode" value="direct" />
@@ -13,13 +13,13 @@
 <generic name="gui_fractional_cout" value="32" />
 <generic name="gui_dsm_out_sel" value="1st_order" />
 <generic name="gui_use_locked" value="true" />
-<generic name="gui_en_adv_params" value="true" />
-<generic name="gui_number_of_clocks" value="3" />
+<generic name="gui_en_adv_params" value="false" />
+<generic name="gui_number_of_clocks" value="2" />
 <generic name="gui_multiply_factor" value="11" />
 <generic name="gui_frac_multiply_factor" value="1503512573" />
 <generic name="gui_divide_factor_n" value="1" />
 <generic name="gui_cascade_counter0" value="false" />
-<generic name="gui_output_clock_frequency0" value="63.055911" />
+<generic name="gui_output_clock_frequency0" value="50.0" />
 <generic name="gui_divide_factor_c0" value="6" />
 <generic name="gui_actual_output_clock_frequency0" value="0 MHz" />
 <generic name="gui_ps_units0" value="ps" />
@@ -28,7 +28,7 @@
 <generic name="gui_actual_phase_shift0" value="0" />
 <generic name="gui_duty_cycle0" value="50" />
 <generic name="gui_cascade_counter1" value="false" />
-<generic name="gui_output_clock_frequency1" value="63.055911" />
+<generic name="gui_output_clock_frequency1" value="25.0" />
 <generic name="gui_divide_factor_c1" value="9" />
 <generic name="gui_actual_output_clock_frequency1" value="0 MHz" />
 <generic name="gui_ps_units1" value="ps" />

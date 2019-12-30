@@ -9,15 +9,15 @@ module HVSyncGenerator(
 
   // declarations for TV-simulator sync parameters
   // horizontal constants
-  parameter H_DISPLAY       = 640; // horizontal display width
-  parameter H_BACK          =  48; // horizontal left border (back porch)
+  parameter H_DISPLAY       = 512; // horizontal display width
+  parameter H_BACK          =  42; // horizontal left border (back porch)
   parameter H_FRONT         =  16; // horizontal right border (front porch)
   parameter H_SYNC          =  96; // horizontal sync width
   // vertical constants
-  parameter V_DISPLAY       = 480; // vertical display height
-  parameter V_TOP           =  10; // vertical top border
-  parameter V_BOTTOM        =  33; // vertical bottom border
-  parameter V_SYNC          =   2; // vertical sync # lines
+  parameter V_DISPLAY       =  256; // vertical display height
+  parameter V_TOP           =  100; // vertical top border
+  parameter V_BOTTOM        =  130; // vertical bottom border
+  parameter V_SYNC          =   40; // vertical sync # lines
   // derived constants
   parameter H_SYNC_START    = H_DISPLAY + H_FRONT;
   parameter H_SYNC_END      = H_DISPLAY + H_FRONT + H_SYNC - 1;
@@ -50,7 +50,7 @@ module HVSyncGenerator(
         vpos <= vpos + 10'd1;
   end
   
-  assign display_on = (hpos<640) && (vpos<256);
+  assign display_on = (hpos<512) && (vpos<256);
 
 
 endmodule
