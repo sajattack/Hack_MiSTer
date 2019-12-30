@@ -109,8 +109,10 @@ module emu(
 
 `include "build_id.v"
 parameter CONF_STR = {
-	"HACK;;",
+	"Hack;;",
+	"-;",
 	"F,BIN;",
+	"-;",
 	"R0,Reset;",
 	"V,v",`BUILD_DATE
 };
@@ -120,7 +122,7 @@ wire [31:0] status;
 
 wire        ioctl_download;
 wire [24:0] ioctl_addr;
-wire [15:0] ioctl_dout;
+wire [7:0] ioctl_dout;
 wire        ioctl_wait;
 wire        ioctl_wr;
 
@@ -164,12 +166,12 @@ wire reset = RESET | buttons[1] | status[0] | ioctl_download;
 
 ////////////////////////////  SYSTEM  ///////////////////////////////////
 wire [14:0] addressM;
-wire [15:0] outM, memOut, instruction;
+wire [15:0] outM, memOut, rom_out;
 wire writeM;
 wire [14:0] pc;
 wire r, g, b, hsync, vsync;
 
-CPU cpu(clk_sys, memOut, instruction, reset, outM, writeM, addressM, pc);
+CPU cpu(clk_sys, memOut, rom_out, reset, outM, writeM, addressM, pc);
 
 assign CLK_VIDEO = clk_video;
 assign VGA_R = {8{r}};
@@ -192,8 +194,8 @@ assign {AUDIO_L, AUDIO_R} = 0;
 assign AUDIO_S   = 0;
 assign AUDIO_MIX = 0;
 
-assign LED_USER  = ioctl_download;
-assign LED_DISK  = 0;
+assign LED_USER  = 0;
+assign LED_DISK  = ioctl_download;
 assign LED_POWER = 0;
 assign BUTTONS = 0;
 assign ADC_BUS = 'Z;
@@ -273,21 +275,44 @@ always @(posedge clk_sys) begin
 			default: ps2_ascii <= 8'h00;
 		endcase
 	end
-end
+end	
+	
 
+////////////////////////////  MEMORY & VIDEO ///////////////////////////////////	 
 
-////////////////////////////  MEMORY & VIDEO ///////////////////////////////////
-//	 reg [15:0] rom [32767:0];
-//	 always @(posedge clk_sys) begin
-//		if (ioctl_wr)
-//			rom[ioctl_addr[14:0]] <= ioctl_dout;
-//		else
-//			instruction <= rom[pc];
-//	 end
+reg count = 1'd0;
+reg [15:0] rom_data_in = 16'd0;
+reg [14:0] rom_addr_in = 15'd0;
+reg rom_wr;
+
+ dpram rom(
+	.clock(clk_sys),
+	.data(rom_data_in),
+	.rdaddress(pc),
+	.wraddress(rom_addr_in),
+	.wren(rom_wr),
+	.q(rom_out)
+);
 	 
-
-	 wire display_on;
-	 ROM32K rom(pc, instruction);
-    Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, ps2_ascii, r, g, b, hsync, vsync, display_on);
+always @(posedge clk_sys) begin
+	rom_wr <= 0;
+	if (ioctl_wr) begin
+		count <= count + 1'd1;
+		if (count==0)
+			rom_data_in[15:8] <= ioctl_dout;
+		else begin
+			rom_data_in[7:0] <= ioctl_dout;
+			rom_addr_in <= ioctl_addr >> 1;
+			rom_wr <= 1;
+		end
+	end else begin
+		rom_addr_in <= rom_addr_in;
+		count <= count;
+		rom_data_in <= rom_data_in;
+	end
+end
+ 
+ wire display_on;
+ Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, ps2_ascii, r, g, b, hsync, vsync, display_on);
 
 endmodule
