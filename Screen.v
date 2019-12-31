@@ -7,7 +7,7 @@ module Screen(
     input [15:0] in,
     input load,
     input [12:0] address,
-    output reg [15:0] out,
+    output [15:0] out,
 	 output reg r, g, b, 
 	 output hsync, vsync, display_on,
 	 output [9:0] hpos, vpos
@@ -27,10 +27,10 @@ module Screen(
 					vshift <= vram[vindex];
                vindex <= vindex + 13'd1;
              end else
-					vshift <= vshift << 1;
-				r <= vshift[15];
-				g <= vshift[15];
-				b <= vshift[15];
+					vshift <= vshift >> 1;
+				r <= vshift[0];
+				g <= vshift[0];
+				b <= vshift[0];
 			end else begin
 				r <= 1'd0;
 				g <= 1'd0;
@@ -40,11 +40,12 @@ module Screen(
 	end
 	
 	 always @(posedge clk) begin
-        if (load) begin
+        if (load)
             vram[address] <= in;
-        end else begin
-            out <= vram[address];
-        end
-    end
+	 end
+	
+	 assign out = vram[address];
+
+
 endmodule
 

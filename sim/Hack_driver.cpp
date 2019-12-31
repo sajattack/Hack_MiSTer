@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     Hack->eval();
     trace->dump(10*tickcount);
     tickcount++;
-    for (int i=0; i<10000000; i++) {
+    for (int i=0; i<10000; i++) {
         if (i % 2 == 0) Hack->clk_video = ~(Hack->clk_video);
         Hack->clk = ~(Hack->clk);
         Hack->eval();

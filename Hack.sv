@@ -247,6 +247,6 @@ always @(posedge clk_sys) begin
 end
  
  wire display_on;
- Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, ps2_ascii, r, g, b, hsync, vsync, display_on);
+ Memory mem(clk_sys, clk_video, reset, outM, writeM, addressM, memOut, hack_scancode, r, g, b, hsync, vsync, display_on);
 
 endmodule

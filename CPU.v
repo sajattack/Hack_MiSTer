@@ -8,10 +8,9 @@ module CPU (
     output reg [14:0] pc
 );
 
-    wire cInst, aDest, zr, ng, jeq, jlt, jgt, jle, jump, 
-        jumpToA, zeroOrNeg, positive;
-    wire [15:0] nextY;
-    reg [15:0] aluX, aluY;
+    wire cInst, aDest, zr, ng;
+    reg [15:0] aluX;
+	 wire [15:0] aluY;
     reg [15:0] aReg, dReg;
     wire [15:0] aluOut;
 	 reg [15:0] instruction;
@@ -21,21 +20,15 @@ module CPU (
     h_Not not1(aInst, cInst);
 
     h_And and2(cInst, instruction[5], aDest);
-    wire dDest = instruction[4];
-    wire mDest = instruction[3];
+    wire dDest = cInst & instruction[4];
+    wire mDest = cInst & instruction[3];
 
-    Mux16 mux2(aReg, inM, instruction[12], nextY);
+    Mux16 mux2(aReg, inM, instruction[12], aluY);
 
     ALU alu(aluX, aluY, instruction[11], instruction[10], instruction[9], instruction[8], instruction[7], instruction[6], zr, ng, aluOut);
 
-    h_And and5(zr, instruction[1], jeq);
-    h_And and6(ng, instruction[2], jlt);
-    h_Or or2(zr, ng, zeroOrNeg); 
-    h_Not not2(zeroOrNeg, positive);
-    h_And and7(positive, instruction[0], jgt);
-    h_Or or3(jeq, jlt, jle);
-    h_Or or4(jle, jgt, jumpToA);
-    h_And and8(cInst, jumpToA, jump);
+
+	 wire jump = cInst & ((ng & instruction[2]) | (zr & instruction[1]) | ((!(zr | ng)) & instruction[0]));
 
     localparam [4:0] EXECUTE = 5'b00001;
 	 localparam [4:0] SETXY = 5'b00010;
@@ -44,7 +37,6 @@ module CPU (
 	 localparam [4:0] FETCH = 5'b10000;
 	 
 	 reg [4:0] state;
-	 reg [2:0] wait_counter;
 	 
 	 initial begin
 		pc = 0;
@@ -52,7 +44,6 @@ module CPU (
 		addressM = 0;
 		outM = 0;
 		aluX = 0;
-		aluY = 0;
 		aReg = 0;
 		dReg = 0;
       state = FETCH;
@@ -65,7 +56,6 @@ module CPU (
 				addressM <= 0;
 				outM <= 0;
 				aluX <= 0;
-				aluY <= 0;
 				aReg <= 0;
 				dReg <= 0;
             state <= FETCH;
@@ -80,19 +70,19 @@ module CPU (
 							  aReg <= instruction;
 							  state <= SET_PC;
 						 end else begin
-							  state <= SETXY;
 							  addressM <= aReg[14:0];
+							  state <= SETXY;
 						 end
 					end
 					SETXY: begin
 						 aluX <= dReg;
-						 aluY <= nextY;
 						 state <= SET_DEST;
 					end
 					SET_DEST: begin
-						 if (mDest)
+						 if (mDest) begin
 							 outM <= aluOut; 
 							 writeM <= 1;
+						 end
 						 if (aDest)
 							  aReg <= aluOut;
 						 if (dDest)
@@ -113,7 +103,6 @@ module CPU (
 						addressM <= 0;
 						outM <= 0;
 						aluX <= 0;
-						aluY <= 0;
 						aReg <= 0;
 						dReg <= 0;
 						state <= FETCH;

@@ -81,8 +81,12 @@ module Keyboard(
 				9'h?01: hack_scancode <= 8'd149; // F9
 				9'h?09: hack_scancode <= 8'd150; // F10
 				9'h?78: hack_scancode <= 8'd151; // F11
-				9'h?07: hack_scancode <= 8'd152;  // F12
+				9'h?07: hack_scancode <= 8'd152; // F12
 				
+				9'h?6B: hack_scancode <= 8'd130; // left arrow
+				9'h?75: hack_scancode <= 8'd131; // up arrow
+				9'h?74: hack_scancode <= 8'd132; // right arrow
+				9'h?72: hack_scancode <= 8'd133; // down arrow
 				
 				9'h?79: hack_scancode <= "+"; // +
 				9'h?7B: hack_scancode <= "-"; // -
