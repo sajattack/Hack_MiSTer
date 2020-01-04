@@ -112,6 +112,7 @@ parameter CONF_STR = {
 	"Hack;;",
 	"-;",
 	"F,BIN;",
+	"O1,Invert color,Yes,No;",
 	"-;",
 	"R0,Reset;",
 	"V,v",`BUILD_DATE
@@ -174,9 +175,9 @@ wire r, g, b, hsync, vsync;
 CPU cpu(clk_sys, memOut, rom_out, reset, outM, writeM, addressM, pc);
 
 assign CLK_VIDEO = clk_video;
-assign VGA_R = {8{r}};
-assign VGA_G = {8{g}};
-assign VGA_B = {8{b}};
+assign VGA_R = {8{r^status[1]}};
+assign VGA_G = {8{g^status[1]}};
+assign VGA_B = {8{b^status[1]}};
 assign VGA_HS = hsync;
 assign VGA_VS = vsync;
 assign VGA_DE = display_on;
