@@ -190,34 +190,6 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to SDCD_SPDIF
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to BTNLED[*]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to BTNLED[*]
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to BTNLED[*]
-set_global_assignment -name QIP_FILE sys/sys.qip
-set_global_assignment -name SYSTEMVERILOG_FILE Hack.sv
-set_global_assignment -name VERILOG_FILE DMux.v
-set_global_assignment -name VERILOG_FILE ROM32K.v
-set_global_assignment -name VERILOG_FILE h_Xor.v
-set_global_assignment -name VERILOG_FILE FullAdder.v
-set_global_assignment -name VERILOG_FILE DMux4Way.v
-set_global_assignment -name VERILOG_FILE Screen.v
-set_global_assignment -name VERILOG_FILE build_id.v
-set_global_assignment -name VERILOG_FILE Mux4Way16.v
-set_global_assignment -name VERILOG_FILE RAM16K.v
-set_global_assignment -name VERILOG_FILE CPU.v
-set_global_assignment -name VERILOG_FILE h_DMux.v
-set_global_assignment -name VERILOG_FILE h_Or.v
-set_global_assignment -name VERILOG_FILE ALU.v
-set_global_assignment -name VERILOG_FILE And16.v
-set_global_assignment -name VERILOG_FILE HalfAdder.v
-set_global_assignment -name VERILOG_FILE Memory.v
-set_global_assignment -name VERILOG_FILE Not16.v
-set_global_assignment -name VERILOG_FILE h_Nand.v
-set_global_assignment -name VERILOG_FILE Mux8Way16.v
-set_global_assignment -name VERILOG_FILE Or16.v
-set_global_assignment -name VERILOG_FILE Mux16.v
-set_global_assignment -name VERILOG_FILE Add16.v
-set_global_assignment -name VERILOG_FILE h_And.v
-set_global_assignment -name VERILOG_FILE h_Mux.v
-set_global_assignment -name VERILOG_FILE h_Not.v
-set_global_assignment -name VERILOG_FILE HVSyncGenerator.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -385,7 +357,6 @@ set_location_assignment PIN_AG23 -to BTN_RESET
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED_*
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to BTN_*
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to BTN_*
-set_global_assignment -name VERILOG_FILE Keyboard.v
 set_global_assignment -name ENABLE_OCT_DONE OFF
 set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
 set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
@@ -402,4 +373,33 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+set_global_assignment -name SYSTEMVERILOG_FILE Hack.sv
+set_global_assignment -name VERILOG_FILE rtl/Screen.v
+set_global_assignment -name VERILOG_FILE rtl/ROM32K.v
+set_global_assignment -name VERILOG_FILE rtl/RAM16K.v
+set_global_assignment -name VERILOG_FILE rtl/Or16.v
+set_global_assignment -name VERILOG_FILE rtl/Not16.v
+set_global_assignment -name VERILOG_FILE rtl/Mux16.v
+set_global_assignment -name VERILOG_FILE rtl/Mux8Way16.v
+set_global_assignment -name VERILOG_FILE rtl/Mux4Way16.v
+set_global_assignment -name VERILOG_FILE rtl/Memory.v
+set_global_assignment -name VERILOG_FILE rtl/Keyboard.v
+set_global_assignment -name VERILOG_FILE rtl/HVSyncGenerator.v
+set_global_assignment -name VERILOG_FILE rtl/HalfAdder.v
+set_global_assignment -name VERILOG_FILE rtl/h_Xor.v
+set_global_assignment -name VERILOG_FILE rtl/h_Or.v
+set_global_assignment -name VERILOG_FILE rtl/h_Not.v
+set_global_assignment -name VERILOG_FILE rtl/h_Nand.v
+set_global_assignment -name VERILOG_FILE rtl/h_Mux.v
+set_global_assignment -name VERILOG_FILE rtl/h_DMux.v
+set_global_assignment -name VERILOG_FILE rtl/h_And.v
+set_global_assignment -name VERILOG_FILE rtl/FullAdder.v
+set_global_assignment -name VERILOG_FILE rtl/dpram.v
+set_global_assignment -name VERILOG_FILE rtl/DMux4Way.v
+set_global_assignment -name VERILOG_FILE rtl/DMux.v
+set_global_assignment -name VERILOG_FILE rtl/CPU.v
+set_global_assignment -name VERILOG_FILE rtl/And16.v
+set_global_assignment -name VERILOG_FILE rtl/ALU.v
+set_global_assignment -name VERILOG_FILE rtl/Add16.v
+set_global_assignment -name QIP_FILE sys/sys.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
