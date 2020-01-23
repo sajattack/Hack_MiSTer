@@ -4,5 +4,5 @@ module h_Not(
 );
 
     h_Nand nand1(in, in, out);
-	 
+    
 endmodule

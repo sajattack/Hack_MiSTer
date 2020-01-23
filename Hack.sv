@@ -1,106 +1,106 @@
 // nand2tetris Hack computer
 
 module emu(
-	//Master input clock
-	input         CLK_50M,
+   //Master input clock
+   input         CLK_50M,
 
-	//Async reset from top-level module.
-	//Can be used as initial reset.
-	input         RESET,
+   //Async reset from top-level module.
+   //Can be used as initial reset.
+   input         RESET,
 
-	//Must be passed to hps_io module
-	inout  [45:0] HPS_BUS,
+   //Must be passed to hps_io module
+   inout  [45:0] HPS_BUS,
 
-	//Base video clock. Usually equals to CLK_SYS.
-	output        CLK_VIDEO,
+   //Base video clock. Usually equals to CLK_SYS.
+   output        CLK_VIDEO,
 
-	//Multiple resolutions are supported using different CE_PIXEL rates.
-	//Must be based on CLK_VIDEO
-	output        CE_PIXEL,
+   //Multiple resolutions are supported using different CE_PIXEL rates.
+   //Must be based on CLK_VIDEO
+   output        CE_PIXEL,
 
-	//Video aspect ratio for HDMI. Most retro systems have ratio 4:3.
-	output  [7:0] VIDEO_ARX,
-	output  [7:0] VIDEO_ARY,
+   //Video aspect ratio for HDMI. Most retro systems have ratio 4:3.
+   output  [7:0] VIDEO_ARX,
+   output  [7:0] VIDEO_ARY,
 
-	output  [7:0] VGA_R,
-	output  [7:0] VGA_G,
-	output  [7:0] VGA_B,
-	output        VGA_HS,
-	output        VGA_VS,
-	output        VGA_DE,    // = ~(VBlank | HBlank)
-	output        VGA_F1,
-	output [1:0]  VGA_SL,
+   output  [7:0] VGA_R,
+   output  [7:0] VGA_G,
+   output  [7:0] VGA_B,
+   output        VGA_HS,
+   output        VGA_VS,
+   output        VGA_DE,    // = ~(VBlank | HBlank)
+   output        VGA_F1,
+   output [1:0]  VGA_SL,
 
-	output        LED_USER,  // 1 - ON, 0 - OFF.
+   output        LED_USER,  // 1 - ON, 0 - OFF.
 
-	// b[1]: 0 - LED status is system status OR'd with b[0]
-	//       1 - LED status is controled solely by b[0]
-	// hint: supply 2'b00 to let the system control the LED.
-	output  [1:0] LED_POWER,
-	output  [1:0] LED_DISK,
+   // b[1]: 0 - LED status is system status OR'd with b[0]
+   //       1 - LED status is controled solely by b[0]
+   // hint: supply 2'b00 to let the system control the LED.
+   output  [1:0] LED_POWER,
+   output  [1:0] LED_DISK,
 
-	// I/O board button press simulation (active high)
-	// b[1]: user button
-	// b[0]: osd button
-	output  [1:0] BUTTONS,
+   // I/O board button press simulation (active high)
+   // b[1]: user button
+   // b[0]: osd button
+   output  [1:0] BUTTONS,
 
-	output [15:0] AUDIO_L,
-	output [15:0] AUDIO_R,
-	output        AUDIO_S,   // 1 - signed audio samples, 0 - unsigned
-	output  [1:0] AUDIO_MIX, // 0 - no mix, 1 - 25%, 2 - 50%, 3 - 100% (mono)
+   output [15:0] AUDIO_L,
+   output [15:0] AUDIO_R,
+   output        AUDIO_S,   // 1 - signed audio samples, 0 - unsigned
+   output  [1:0] AUDIO_MIX, // 0 - no mix, 1 - 25%, 2 - 50%, 3 - 100% (mono)
 
-	//ADC
-	inout   [3:0] ADC_BUS,
+   //ADC
+   inout   [3:0] ADC_BUS,
 
-	//SD-SPI
-	output        SD_SCK,
-	output        SD_MOSI,
-	input         SD_MISO,
-	output        SD_CS,
-	input         SD_CD,
+   //SD-SPI
+   output        SD_SCK,
+   output        SD_MOSI,
+   input         SD_MISO,
+   output        SD_CS,
+   input         SD_CD,
 
-	//High latency DDR3 RAM interface
-	//Use for non-critical time purposes
-	output        DDRAM_CLK,
-	input         DDRAM_BUSY,
-	output  [7:0] DDRAM_BURSTCNT,
-	output [28:0] DDRAM_ADDR,
-	input  [63:0] DDRAM_DOUT,
-	input         DDRAM_DOUT_READY,
-	output        DDRAM_RD,
-	output [63:0] DDRAM_DIN,
-	output  [7:0] DDRAM_BE,
-	output        DDRAM_WE,
+   //High latency DDR3 RAM interface
+   //Use for non-critical time purposes
+   output        DDRAM_CLK,
+   input         DDRAM_BUSY,
+   output  [7:0] DDRAM_BURSTCNT,
+   output [28:0] DDRAM_ADDR,
+   input  [63:0] DDRAM_DOUT,
+   input         DDRAM_DOUT_READY,
+   output        DDRAM_RD,
+   output [63:0] DDRAM_DIN,
+   output  [7:0] DDRAM_BE,
+   output        DDRAM_WE,
 
-	//SDRAM interface with lower latency
-	output        SDRAM_CLK,
-	output        SDRAM_CKE,
-	output [12:0] SDRAM_A,
-	output  [1:0] SDRAM_BA,
-	inout  [15:0] SDRAM_DQ,
-	output        SDRAM_DQML,
-	output        SDRAM_DQMH,
-	output        SDRAM_nCS,
-	output        SDRAM_nCAS,
-	output        SDRAM_nRAS,
-	output        SDRAM_nWE,
+   //SDRAM interface with lower latency
+   output        SDRAM_CLK,
+   output        SDRAM_CKE,
+   output [12:0] SDRAM_A,
+   output  [1:0] SDRAM_BA,
+   inout  [15:0] SDRAM_DQ,
+   output        SDRAM_DQML,
+   output        SDRAM_DQMH,
+   output        SDRAM_nCS,
+   output        SDRAM_nCAS,
+   output        SDRAM_nRAS,
+   output        SDRAM_nWE,
 
-	input         UART_CTS,
-	output        UART_RTS,
-	input         UART_RXD,
-	output        UART_TXD,
-	output        UART_DTR,
-	input         UART_DSR,
+   input         UART_CTS,
+   output        UART_RTS,
+   input         UART_RXD,
+   output        UART_TXD,
+   output        UART_DTR,
+   input         UART_DSR,
 
-	// Open-drain User port.
-	// 0 - D+/RX
-	// 1 - D-/TX
-	// 2..6 - USR2..USR6
-	// Set USER_OUT to 1 to read from USER_IN.
-	input   [6:0] USER_IN,
-	output  [6:0] USER_OUT,
+   // Open-drain User port.
+   // 0 - D+/RX
+   // 1 - D-/TX
+   // 2..6 - USR2..USR6
+   // Set USER_OUT to 1 to read from USER_IN.
+   input   [6:0] USER_IN,
+   output  [6:0] USER_OUT,
 
-	input         OSD_STATUS
+   input         OSD_STATUS
 );
 
 
@@ -109,13 +109,13 @@ module emu(
 
 `include "build_id.v"
 parameter CONF_STR = {
-	"Hack;;",
-	"-;",
-	"F,BIN;",
-	"O1,Invert color,Yes,No;",
-	"-;",
-	"R0,Reset;",
-	"V,v",`BUILD_DATE
+   "Hack;;",
+   "-;",
+   "F,BIN;",
+   "O1,Invert color,Yes,No;",
+   "-;",
+   "R0,Reset;",
+   "V,v",`BUILD_DATE
 };
 
 wire  [1:0] buttons;
@@ -129,21 +129,21 @@ wire        ioctl_wr;
 
 hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 (
-	.clk_sys(clk_sys),
-	.HPS_BUS(HPS_BUS),
+   .clk_sys(clk_sys),
+   .HPS_BUS(HPS_BUS),
 
-	.conf_str(CONF_STR),
+   .conf_str(CONF_STR),
 
-	.ioctl_download(ioctl_download),
-	.ioctl_wr(ioctl_wr),
-	.ioctl_addr(ioctl_addr),
-	.ioctl_dout(ioctl_dout),
-	.ioctl_wait(ioctl_wait),
-	
-	.buttons(buttons),
-	.status(status),
+   .ioctl_download(ioctl_download),
+   .ioctl_wr(ioctl_wr),
+   .ioctl_addr(ioctl_addr),
+   .ioctl_dout(ioctl_dout),
+   .ioctl_wait(ioctl_wait),
+   
+   .buttons(buttons),
+   .status(status),
 
-	.ps2_key(ps2_key)
+   .ps2_key(ps2_key)
 );
 
 
@@ -155,11 +155,11 @@ wire clk_sys, clk_video;
 
 pll pll
 (
-	.refclk(CLK_50M),
-	.rst(0),
-	.outclk_0(clk_sys),
-	.outclk_1(clk_video),
-	.locked(clock_locked)
+   .refclk(CLK_50M),
+   .rst(0),
+   .outclk_0(clk_sys),
+   .outclk_1(clk_video),
+   .locked(clock_locked)
 );
 
 
@@ -213,7 +213,7 @@ wire [7:0] hack_scancode;
 
 Keyboard keyboard(clk_sys, ps2_key, hack_scancode);
 
-////////////////////////////  MEMORY & VIDEO ///////////////////////////////////	 
+////////////////////////////  MEMORY & VIDEO ///////////////////////////////////  
 
 reg count = 1'd0;
 reg [15:0] rom_data_in = 16'd0;
@@ -221,30 +221,30 @@ reg [14:0] rom_addr_in = 15'd0;
 reg rom_wr;
 
  dpram rom(
-	.clock(clk_sys),
-	.data(rom_data_in),
-	.rdaddress(pc),
-	.wraddress(rom_addr_in),
-	.wren(rom_wr),
-	.q(rom_out)
+   .clock(clk_sys),
+   .data(rom_data_in),
+   .rdaddress(pc),
+   .wraddress(rom_addr_in),
+   .wren(rom_wr),
+   .q(rom_out)
 );
-	 
+    
 always @(posedge clk_sys) begin
-	rom_wr <= 0;
-	if (ioctl_wr) begin
-		count <= count + 1'd1;
-		if (count==0)
-			rom_data_in[15:8] <= ioctl_dout;
-		else begin
-			rom_data_in[7:0] <= ioctl_dout;
-			rom_addr_in <= ioctl_addr >> 1;
-			rom_wr <= 1;
-		end
-	end else begin
-		rom_addr_in <= rom_addr_in;
-		count <= count;
-		rom_data_in <= rom_data_in;
-	end
+   rom_wr <= 0;
+   if (ioctl_wr) begin
+      count <= count + 1'd1;
+      if (count==0)
+         rom_data_in[15:8] <= ioctl_dout;
+      else begin
+         rom_data_in[7:0] <= ioctl_dout;
+         rom_addr_in <= ioctl_addr >> 1;
+         rom_wr <= 1;
+      end
+   end else begin
+      rom_addr_in <= rom_addr_in;
+      count <= count;
+      rom_data_in <= rom_data_in;
+   end
 end
  
  wire display_on;
