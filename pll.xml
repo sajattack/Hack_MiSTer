@@ -4,7 +4,7 @@
 <generic name="debug_use_rbc_taf_method" value="false" />
 <generic name="device_family" value="Cyclone V" />
 <generic name="device" value="5CEBA2F17A7" />
-<generic name="gui_device_speed_grade" value="2" />
+<generic name="gui_device_speed_grade" value="1" />
 <generic name="gui_pll_mode" value="Integer-N PLL" />
 <generic name="gui_reference_clock_frequency" value="50.0" />
 <generic name="gui_channel_spacing" value="0.0" />
@@ -15,12 +15,12 @@
 <generic name="gui_use_locked" value="true" />
 <generic name="gui_en_adv_params" value="false" />
 <generic name="gui_number_of_clocks" value="2" />
-<generic name="gui_multiply_factor" value="11" />
-<generic name="gui_frac_multiply_factor" value="1503512573" />
+<generic name="gui_multiply_factor" value="1" />
+<generic name="gui_frac_multiply_factor" value="1" />
 <generic name="gui_divide_factor_n" value="1" />
 <generic name="gui_cascade_counter0" value="false" />
-<generic name="gui_output_clock_frequency0" value="50.0" />
-<generic name="gui_divide_factor_c0" value="6" />
+<generic name="gui_output_clock_frequency0" value="5.0" />
+<generic name="gui_divide_factor_c0" value="1" />
 <generic name="gui_actual_output_clock_frequency0" value="0 MHz" />
 <generic name="gui_ps_units0" value="ps" />
 <generic name="gui_phase_shift0" value="0" />
@@ -29,16 +29,16 @@
 <generic name="gui_duty_cycle0" value="50" />
 <generic name="gui_cascade_counter1" value="false" />
 <generic name="gui_output_clock_frequency1" value="21.0" />
-<generic name="gui_divide_factor_c1" value="9" />
+<generic name="gui_divide_factor_c1" value="1" />
 <generic name="gui_actual_output_clock_frequency1" value="0 MHz" />
 <generic name="gui_ps_units1" value="ps" />
 <generic name="gui_phase_shift1" value="0" />
-<generic name="gui_phase_shift_deg1" value="-60.0" />
+<generic name="gui_phase_shift_deg1" value="0.0" />
 <generic name="gui_actual_phase_shift1" value="0" />
 <generic name="gui_duty_cycle1" value="50" />
 <generic name="gui_cascade_counter2" value="false" />
-<generic name="gui_output_clock_frequency2" value="31.527956" />
-<generic name="gui_divide_factor_c2" value="18" />
+<generic name="gui_output_clock_frequency2" value="100.0" />
+<generic name="gui_divide_factor_c2" value="1" />
 <generic name="gui_actual_output_clock_frequency2" value="0 MHz" />
 <generic name="gui_ps_units2" value="ps" />
 <generic name="gui_phase_shift2" value="0" />
@@ -46,7 +46,7 @@
 <generic name="gui_actual_phase_shift2" value="0" />
 <generic name="gui_duty_cycle2" value="50" />
 <generic name="gui_cascade_counter3" value="false" />
-<generic name="gui_output_clock_frequency3" value="21.47727" />
+<generic name="gui_output_clock_frequency3" value="100.0" />
 <generic name="gui_divide_factor_c3" value="1" />
 <generic name="gui_actual_output_clock_frequency3" value="0 MHz" />
 <generic name="gui_ps_units3" value="ps" />
@@ -55,7 +55,7 @@
 <generic name="gui_actual_phase_shift3" value="0" />
 <generic name="gui_duty_cycle3" value="50" />
 <generic name="gui_cascade_counter4" value="false" />
-<generic name="gui_output_clock_frequency4" value="112.0" />
+<generic name="gui_output_clock_frequency4" value="100.0" />
 <generic name="gui_divide_factor_c4" value="1" />
 <generic name="gui_actual_output_clock_frequency4" value="0 MHz" />
 <generic name="gui_ps_units4" value="ps" />
@@ -180,9 +180,9 @@
 <generic name="gui_phase_shift_deg17" value="0.0" />
 <generic name="gui_actual_phase_shift17" value="0" />
 <generic name="gui_duty_cycle17" value="50" />
-<generic name="gui_pll_auto_reset" value="On" />
+<generic name="gui_pll_auto_reset" value="Off" />
 <generic name="gui_pll_bandwidth_preset" value="Auto" />
-<generic name="gui_en_reconf" value="true" />
+<generic name="gui_en_reconf" value="false" />
 <generic name="gui_en_dps_ports" value="false" />
 <generic name="gui_en_phout_ports" value="false" />
 <generic name="gui_phout_division" value="1" />
