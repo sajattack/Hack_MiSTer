@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<instance entity-name="altera_pll_reconfig" version="17.0" >
+<instance entity-name="altera_pll_reconfig" version="17.1" >
 <generic name="device_family" value="Cyclone V" />
 <generic name="ENABLE_MIF" value="false" />
 <generic name="MIF_FILE_NAME" value="sys/pll_cfg.mif" />

@@ -157,8 +157,8 @@ pll pll
 (
    .refclk(CLK_50M),
    .rst(0),
-   .outclk_0(clk_sys),
-   .outclk_1(clk_video),
+   .outclk_0(clk_sys), //5mhz
+   .outclk_1(clk_video), // 21mhz
    .locked(clock_locked)
 );
 
