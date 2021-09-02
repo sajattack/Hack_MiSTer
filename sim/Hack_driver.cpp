@@ -7,6 +7,10 @@
 static VerilatedVcdC *trace = nullptr;
 unsigned long tickcount = 0;
 
+double sc_time_stamp() {
+    return (double) tickcount;
+}
+
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
     Vverilator_top *Hack = new Vverilator_top;

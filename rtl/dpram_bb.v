@@ -32,26 +32,27 @@
 //refer to the applicable agreement for further details.
 
 module dpram (
-	clock,
-	data,
-	rdaddress,
-	wraddress,
-	wren,
-	q);
+    clock,
+    data,
+    rdaddress,
+    wraddress,
+    wren,
+    q
+);
 
-	input	  clock;
-	input	[15:0]  data;
-	input	[14:0]  rdaddress;
-	input	[14:0]  wraddress;
-	input	  wren;
-	output	[15:0]  q;
+  input clock;
+  input [15:0] data;
+  input [14:0] rdaddress;
+  input [14:0] wraddress;
+  input wren;
+  output [15:0] q;
 `ifndef ALTERA_RESERVED_QIS
-// synopsys translate_off
+  // synopsys translate_off
 `endif
-	tri1	  clock;
-	tri0	  wren;
+  tri1 clock;
+  tri0 wren;
 `ifndef ALTERA_RESERVED_QIS
-// synopsys translate_on
+  // synopsys translate_on
 `endif
 
 endmodule

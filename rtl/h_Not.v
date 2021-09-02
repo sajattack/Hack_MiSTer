@@ -1,8 +1,12 @@
-module h_Not(
+module h_Not (
     input in,
     output wire out
 );
 
-    h_Nand nand1(in, in, out);
-    
+  h_Nand nand1 (
+      in,
+      in,
+      out
+  );
+
 endmodule

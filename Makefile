@@ -1,5 +1,5 @@
 all:
-	verilator -cc verilator_top.v --exe sim/Hack_driver.cpp --trace
+	verilator -cc verilator_top.v -I./rtl --exe sim/Hack_driver.cpp --trace
 	make -C obj_dir -f Vverilator_top.mk
 sdl: 
 	verilator --cc verilator_top.v -I./rtl -I/usr/lib/ --exe sim/SDL2_sim.cpp -LDFLAGS "-lSDL2main -lSDL2" --public

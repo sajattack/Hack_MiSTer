@@ -1,8 +1,9 @@
 module h_Nand (
-    input a, b,
+    input  a,
+    b,
     output out
 );
 
-    assign out = ~(a & b);
+  assign out = ~(a & b);
 
 endmodule
