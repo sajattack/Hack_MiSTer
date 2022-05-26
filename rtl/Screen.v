@@ -19,7 +19,7 @@ module Screen (
 );
 
 
-  reg [15:0] vram[8192]  /*verilator public*/;
+  reg [15:0] vram[8192]  /*verilator public_flat*/;
 
   HVSyncGenerator hvsync (
       clk_video,

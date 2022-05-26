@@ -1,12 +1,9 @@
 #include <SDL2/SDL.h>
 #include <cstdint>
 #include <fstream>
-#include <bitset>
+#include <verilated.h>
 #include "../obj_dir/Vverilator_top.h"
-#include "../obj_dir/Vverilator_top_verilator_top.h"
-#include "../obj_dir/Vverilator_top_Memory.h"
-#include "../obj_dir/Vverilator_top_Screen.h"
-#include "verilated.h"
+#include "../obj_dir/Vverilator_top___024root.h"
 #include <iostream>
 
 
@@ -18,17 +15,28 @@ void step()
  	top->clk = 0;
  	top->clk_video=0;
  	top->eval();
- 	top->clk = 1;
- 	top->clk_video=0;
- 	top->eval();
- 	top->clk = 0;
- 	top->clk_video=0;
- 	top->eval();
+     //top->clk = 1;
+     //top->clk_video=0;
+     //top->eval();
+     //top->clk = 0;
+     //top->clk_video=0;
+     //top->eval();
  	top->clk = 1;
  	top->clk_video=1;
  	top->eval();
- 	top->clk = 0;
- 	top->clk_video=1;
+     //top->clk = 0;
+     //top->clk_video=1;
+     //top->eval();
+}
+
+void reset() {
+	top->reset = 1;
+	top->clk = 0;
+	top->clk_video = 0;
+ 	top->eval();
+	top->reset = 0;
+	top->clk = 1;
+	top->clk_video = 1;
  	top->eval();
 }
 
@@ -66,9 +74,10 @@ int handleInput()
 
  void drawScreen()
  {
-	uint16_t *smem = top->verilator_top->mem->screen1->vram;
+	VlUnpacked<short unsigned int, 8192> smem = top->rootp->verilator_top__DOT__mem__DOT__screen1__DOT__vram;
+
 	for (int y = 0; y < 256; y++) {
-		uint16_t *row = &smem[y << 5];
+		uint16_t* row = &smem[y << 5];
 		int x = 0;
 		for (int i = 0; i < 32; i++) {
 			int xib = 1;
@@ -89,28 +98,23 @@ int handleInput()
  {
  	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
  	SDL_RenderClear(renderer);
-
  	drawScreen();
-
  	SDL_RenderPresent(renderer);
  }
 
 int main( int argc, char* args[] )
 {
 	top = new Vverilator_top;
-	top->reset = 1;
-	top->clk = 0;
- 	top->eval();
-	top->reset = 0;
-	top->clk = 1;
- 	top->eval();
-
+	reset();
     initVideo();
 
     do {
-        for (int c = 0; c < 10000; c++)
+        for (int c = 0; c < 500000; c++)
+        {
             step();
+        }
         draw();
     } while (handleInput() >= 0);
     return 0;
 }
+
