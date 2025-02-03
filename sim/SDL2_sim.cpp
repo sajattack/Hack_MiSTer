@@ -74,8 +74,7 @@ int handleInput()
 
  void drawScreen()
  {
-	VlUnpacked<short unsigned int, 8192> smem = top->rootp->verilator_top__DOT__mem__DOT__screen1__DOT__vram;
-
+    uint16_t *smem = top->rootp->verilator_top__DOT__mem__DOT__screen1__DOT__vram.m_storage;
 	for (int y = 0; y < 256; y++) {
 		uint16_t* row = &smem[y << 5];
 		int x = 0;

@@ -30,9 +30,11 @@ module verilator_top (
       pc
   );
   ROM32K rom0 (
+      clk,
       pc,
       instruction
   );
+
   Memory mem (
       clk,
       clk_video,

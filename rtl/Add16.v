@@ -19,9 +19,6 @@ module Add16 (
   wire carry13;
   wire carry14;
   wire carry15;
-  // verilator lint_off UNUSED
-  wire garbage;
-  // verilator lint_on UNUSED
 
   HalfAdder hadder (
       a[0],
@@ -127,12 +124,13 @@ module Add16 (
       out[14],
       carry15
   );
+  /* verilator lint_off PINMISSING*/
   FullAdder fadder15 (
       a[15],
       b[15],
       carry15,
       out[15],
-      garbage
   );
+  /* verilator lint_on PINMISSING */
 
 endmodule

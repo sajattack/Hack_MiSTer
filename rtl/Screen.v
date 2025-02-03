@@ -7,19 +7,14 @@ module Screen (
     input [15:0] in,
     input load,
     input [12:0] address,
-    output [15:0] out,
-    output reg r,
-    g,
-    b,
-    output hsync,
-    vsync,
-    display_on,
-    output [9:0] hpos,
-    vpos
+    output reg [15:0] out,
+    output reg r, g, b, 
+    output hsync, vsync, display_on,
+    output [9:0] hpos, vpos
 );
 
 
-  reg [15:0] vram[8192]  /*verilator public_flat*/;
+  reg [15:0] vram[8192]  /*verilator public_flat */;
 
   HVSyncGenerator hvsync (
       clk_video,
@@ -51,12 +46,29 @@ module Screen (
     end
   end
 
-  always @(posedge clk) begin
-    if (load) vram[address] <= in;
-  end
-
-  assign out = vram[address];
-
-
+   always @(posedge clk_video) begin
+         if (display_on) begin
+             if (0 == hpos[3:0]) begin
+               vshift <= vram[vindex];
+               vindex <= vindex + 13'd1;
+             end else
+               vshift <= vshift >> 1;
+            r <= vshift[0];
+            g <= vshift[0];
+            b <= vshift[0];
+         end else begin
+            r <= 1'd0;
+            g <= 1'd0;
+            b <= 1'd0;
+            if (vsync) vindex <= 0; // reset vindex every frame
+         end
+   end
+   
+    always @(posedge clk) begin
+        if (load)
+            vram[address] <= in;
+		  else 
+		      out <= vram[address];
+    end
 endmodule
 

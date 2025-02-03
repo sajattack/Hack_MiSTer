@@ -9,30 +9,29 @@ module Memory (
 
     input [7:0] hack_scancode,
     output r,
-    g,
-    b,
-    hsync,
-    vsync,
-    display_on,
+    output g,
+    output b,
+    output hsync,
+    output vsync,
+    output display_on,
     output [9:0] hpos,
-    vpos
+    output [9:0] vpos
 );
 
   wire bank1, bank2, load_ram, load_screen;
   wire [15:0] ram_out, screen_out;
   wire [15:0] ram_in, screen_in;
   wire [15:0] next_out;
-  wire garbage = 1'b0;
-
 
   DMux4Way dmux1 (
-      load,
-      address[14:13],
-      bank1,
-      bank2,
-      load_screen,
-      garbage
+      .in(load),
+      .sel(address[14:13]),
+      .a(bank1),
+      .b(bank2),
+      .c(load_screen),
+      .d()
   );
+
   h_Or or1 (
       bank1,
       bank2,
